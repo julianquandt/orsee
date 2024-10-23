@@ -14,7 +14,16 @@ if ($proceed) {
     $color=load_colors();
     session_set_save_handler("orsee_session_open", "orsee_session_close", "orsee_session_read", "orsee_session_write", "orsee_session_destroy", "orsee_session_gc");
     session_start();
+
+    // validate new strip_array function (change in this file should not be merged and is only for debugging.)
+    $_REQUEST_NEW=strip_tags_array_old($_REQUEST);
     $_REQUEST=strip_tags_array($_REQUEST);
+    if($_REQUEST_NEW == $_REQUEST){
+        $data = "Request is equal";
+    } else {
+        $data = "Request is not equal";
+    }
+    echo("<script>console.log('PHP: " . $data . "');</script>");
 }
 
 if ($proceed) {

@@ -237,7 +237,7 @@ function helpers__scramblemail($address) {
 }
 
 // strip HTML tags from (posted vars) array
-function strip_tags_array($var,$exempt=array()) {
+function strip_tags_array_old($var,$exempt=array()) {
     if (is_array($var)) {
         foreach($var as $k=>$v) {
             if (!in_array($k,$exempt)) $var[$k]=strip_tags_array($v);
@@ -247,6 +247,80 @@ function strip_tags_array($var,$exempt=array()) {
         $var=str_replace(array('&','<','>','"',"'",'/'),
                          array('&amp;','&lt;','&gt;','&quot;','&#x27;',' &#x2F;'),
                             $var);
+    }
+    return $var;
+}
+
+// strip HTML tags from (posted vars) array
+function strip_tags_array($var, $allowed_tags = array(), $exempt = array()) {
+    if (is_array($var)) {
+        foreach ($var as $k => $v) {
+            if (!in_array($k, $exempt)) {
+                $var[$k] = strip_tags_array($v, $allowed_tags, $exempt);
+            }
+        }
+    } else {
+        $script_placeholders = array();
+
+        // Extract content inside allowed script tags
+        if (in_array('script', $allowed_tags)) {
+            // Use regex to extract script content
+            preg_match_all('/(<script\b[^>]*>)(.*?)(<\/script>)/is', $var, $matches, PREG_SET_ORDER);
+            if (!empty($matches)) {
+                foreach ($matches as $i => $match) {
+                    $placeholder = "__SCRIPT_PLACEHOLDER_$i__";
+                    $script_full = $match[0]; // Full <script>...</script>
+                    $script_placeholders[$placeholder] = $script_full;
+                    // Replace the script content with placeholder
+                    $var = str_replace($script_full, $placeholder, $var);
+                }
+            }
+        }
+
+        // Build the allowed tags pattern for the regex
+        if (!empty($allowed_tags)) {
+            // Exclude 'script' from allowed tags for now
+            $allowed_tags_without_script = array_diff($allowed_tags, array('script'));
+            $allowed_tags_pattern = implode('|', array_map('preg_quote', $allowed_tags_without_script));
+        }
+
+        // Remove disallowed tags using regex
+        if (empty($allowed_tags_without_script)) {
+            // Remove all tags except script placeholders
+            $var = preg_replace('/<\/?(?!__SCRIPT_PLACEHOLDER_)[a-z][a-z0-9]*\b[^>]*>/i', '', $var);
+        } else {
+            // Remove disallowed tags
+            $var = preg_replace('/<\/?(?!(?:' . $allowed_tags_pattern . '|\__SCRIPT_PLACEHOLDER_)[a-z0-9]*\b)[a-z][a-z0-9]*\b[^>]*>/i', '', $var);
+        }
+
+        // Convert special characters to HTML entities
+        $var = htmlspecialchars($var, ENT_QUOTES, 'UTF-8', false);
+
+        // Decode allowed tags to prevent them from being encoded (except script)
+        if (!empty($allowed_tags_without_script)) {
+            foreach ($allowed_tags_without_script as $tag) {
+                $var = str_replace(
+                    array(
+                        '&lt;' . $tag . '&gt;',
+                        '&lt;/' . $tag . '&gt;',
+                        '&lt;' . $tag . ' /&gt;',
+                        '&lt;' . $tag . '/&gt;'
+                    ),
+                    array(
+                        '<' . $tag . '>',
+                        '</' . $tag . '>',
+                        '<' . $tag . ' />',
+                        '<' . $tag . '/>'
+                    ),
+                    $var
+                );
+            }
+        }
+
+        // Restore script tags from placeholders
+        if (!empty($script_placeholders)) {
+            $var = str_replace(array_keys($script_placeholders), array_values($script_placeholders), $var);
+        }
     }
     return $var;
 }

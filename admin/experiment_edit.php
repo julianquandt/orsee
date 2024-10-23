@@ -86,6 +86,15 @@ if ($proceed) {
 
             $edit=$_REQUEST;
 
+            // sanitize all html tags
+            // $edit = array_map(function($item) {
+            //     return htmlspecialchars($item);
+            // }, $edit);
+
+            // or alternatively (more permissive) filter all tags except b,i,a
+            $allowed_tags = array('b', 'i', 'a'); // allow bold italic and hyperlinks
+            $edit = strip_tags_array($edit, $allowed_tags); //strip_tags_array changed in sites.php 
+
             $done=orsee_db_save_array($edit,"experiments",$edit['experiment_id'],"experiment_id");
 
             if ($done) {
