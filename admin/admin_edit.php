@@ -31,6 +31,9 @@ if ($proceed) {
             unset($_REQUEST['adminname']);
         }
 
+        // sanitize everything in request
+        $_REQUEST=strip_tags_array($_REQUEST);
+
         if (isset($_REQUEST['adminname']) && !$_REQUEST['adminname']) {
             message(lang('you_have_to_give_a_username'));
             $continue=false;
