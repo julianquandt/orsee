@@ -30,6 +30,9 @@ if ($proceed) {
             $continue=false;
         }
 
+        // sanitize type name
+        $type['type_name']=strip_tags_array($type['type_name']);
+
         if (isset($type['right_list'])) {
             $trights=array();
             foreach ($type['right_list'] as $key=>$value) {
