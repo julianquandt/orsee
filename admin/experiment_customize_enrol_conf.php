@@ -53,6 +53,10 @@ if ($proceed) {
 
         // prepare lang stuff
         foreach ($inv_langs as $inv_lang) {
+            // sanitize input
+            $allowed_tags=array('b','i','u','a','br','p','ul','ol','li','font','span','div','table','tr','td','th','tbody','thead','tfoot');
+            $sitem[$inv_lang.'_subject']=strip_tags_array($_REQUEST[$inv_lang.'_subject'],$allowed_tags);
+            $sitem[$inv_lang.'_body']=strip_tags_array($_REQUEST[$inv_lang.'_body'],$allowed_tags);
             $sitem[$inv_lang]=$sitem[$inv_lang.'_subject']."\n".$sitem[$inv_lang.'_body'];
         }
 
