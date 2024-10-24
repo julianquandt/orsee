@@ -56,6 +56,9 @@ if ($proceed) {
             $upload['upload_type']=$_REQUEST['upload_type'];
             $upload['upload_name']=$_REQUEST['upload_name'];
 
+            // sanitize $upload['upload_name']
+            $upload['upload_name']=stip_tags_array($upload['upload_name']);
+
             $done=orsee_db_save_array($upload,"uploads",$upload['upload_id'],"upload_id");
 
             if ($done) {

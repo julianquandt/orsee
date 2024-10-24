@@ -63,6 +63,9 @@ if ($proceed) {
                 $upload['upload_name']=$_REQUEST['upload_name'];
                 $upload['upload_filesize']=$file['size'];
 
+                // sanitize $upload['upload_name']
+                $upload['upload_name']=strip_tags_array($upload['upload_name']);
+
                 $done=preg_match("/.*\.([^\.]*)$/",$file['name'],$matches);
                 $upload['upload_suffix']=$matches[1];
 
