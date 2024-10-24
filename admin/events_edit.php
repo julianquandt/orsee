@@ -23,6 +23,11 @@ if ($proceed) {
         $edit=$_REQUEST;
         $continue=true;
 
+        //sanitize $edit['reason'] and $edit['reason_public']
+        $allowed_tags = array('b', 'i', 'a'); // allow bold italic and hyperlinks
+        $edit['reason']=strip_tags_array($edit['reason'], $allowed_tags);
+        $edit['reason_public']=strip_tags_array($edit['reason_public'], $allowed_tags);
+
         if ($edit['event_start']>=$edit['event_stop']) {
             message(lang('start_time_must_be_earlier_than_stop_time'));
             $continue=false;
