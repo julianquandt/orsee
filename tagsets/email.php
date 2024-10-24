@@ -151,7 +151,7 @@ function email__show_email($email,$open_reply=false,$open_note=false) {
         } else {
             if (!$email['flag_assigned_to_read']) $flags['assigned_to_read']=1;
         }
-        if (count($flags)>0) email__update_flags($email['thread_id'],$flags);
+        if (!isset($flags) && count($flags)>0) email__update_flags($email['thread_id'],$flags);
     }
 
     // guess participant if not already set
