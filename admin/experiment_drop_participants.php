@@ -88,6 +88,9 @@ if ($proceed) {
 
         // show query in human-readable form
         $pseudo_query_array=query__get_pseudo_query_array($posted_query['query']);
+        //sanitize pseudo query
+        $pseudo_query_array=strip_tags_array($pseudo_query_array);
+
         $pseudo_query_display=query__display_pseudo_query($pseudo_query_array,false);
 
         echo '<TABLE border=0>';
