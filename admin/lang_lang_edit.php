@@ -33,11 +33,15 @@ if ($proceed) {
 
         // add language
         if ($continue) {
+            //sanitize tags in language name
+            $_REQUEST['lang_name']=strip_tags_array($_REQUEST['lang_name']);
             $pars=array(':lang_name'=>$_REQUEST['lang_name']);
             $query="UPDATE ".table('lang')." SET ".$tlang."= :lang_name
                     WHERE content_type='lang' AND content_name='lang_name'";
             $done=or_query($query,$pars);
-
+            
+            // sanitize tags in language icon (not sure if this is necessary)
+            $_REQUEST['lang_icon_base64']=strip_tags_array($_REQUEST['lang_icon_base64']);
             $pars=array(':lang_icon_base64'=>$_REQUEST['lang_icon_base64']);
             $query="UPDATE ".table('lang')." SET ".$tlang."= :lang_icon_base64
                     WHERE content_type='lang' AND content_name='lang_icon_base64'";
