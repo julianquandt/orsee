@@ -52,6 +52,10 @@ if ($proceed) {
         // add language
         if ($continue) {
 
+            //sanitize html tags
+            $nlang_sc=strip_tags_array($nlang_sc);
+            $nlang_name=strip_tags_array($nlang_name);
+
             // as transaction?
             $query="ALTER TABLE ".table('lang')." ADD COLUMN ".$nlang_sc." text";
             $done=or_query($query);
