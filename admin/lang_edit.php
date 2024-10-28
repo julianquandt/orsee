@@ -28,6 +28,8 @@ if ($proceed) {
     if (isset($_REQUEST['alter_lang']) && $_REQUEST['alter_lang'] && isset($_REQUEST['symbols']) && is_array($_REQUEST['symbols'])) {
         $pars=array();
         foreach ($_REQUEST['symbols'] as $symbol => $content) {
+            $symbol=strip_tags_array($symbol);
+            $content=strip_tags_array($content);
             $pars[]=array(':content'=>trim($content),':symbol'=>$symbol);
         }
         $query="UPDATE ".table('lang')."
