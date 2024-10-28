@@ -22,6 +22,9 @@ if ($proceed) {
         $_REQUEST['content_type']="lang";
 
         if ($lang_id) {
+            foreach($languages as $language){
+                $_REQUEST[$language]=strip_tags_array($_REQUEST[$language]);
+            }
             $done=orsee_db_save_array($_REQUEST,"lang",$lang_id,"lang_id");
         } else {
             $lang_id=lang__insert_to_lang($_REQUEST);
