@@ -134,6 +134,8 @@ if ($proceed) {
 
         if ($continue) {
             $sitem=$_REQUEST;
+            $allowed_tags=array('b','i','u','a','br','p','ul','ol','li','font','span','div','table','tr','td','th','tbody','thead','tfoot');
+            $sitem=strip_tags_array($sitem, $allowed_tags);
             $sitem['content_type']=$item;
 
             if (!$id) $new=true; else $new=false;
