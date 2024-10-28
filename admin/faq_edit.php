@@ -48,6 +48,9 @@ if ($proceed) {
         foreach ($languages as $language) {
             $question[$language]=$rquestion[$language];
             $answer[$language]=$ranswer[$language];
+            $allowed_tags=array('b','i','u','a','br','p','ul','ol','li','font','span','div','table','tr','td','th','tbody','thead','tfoot');
+            $question[$language]=strip_tags_array($question[$language]);
+            $answer[$language]=strip_tags_array($answer[$language]);
         }
 
         if ($continue) {
