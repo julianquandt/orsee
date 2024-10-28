@@ -80,8 +80,13 @@ if ($proceed) {
 
             $exptype=$_REQUEST;
             $exptype['exptype_mapping']=implode(",",$map);
+            $exptype['exptype_name']=strip_tags_array($exptype['exptype_name']);
+            $exptype['exptype_description']=strip_tags_array($exptype['exptype_description']);
 
-            foreach ($languages as $language) $lsub[$language]=$selfdesc[$language];
+            foreach ($languages as $language){
+                $lsub[$language]=$selfdesc[$language];
+                $lsub[$language]=strip_tags_array($lsub[$language]);  
+            } 
 
             $done=orsee_db_save_array($exptype,"experiment_types",$exptype_id,"exptype_id");
 
